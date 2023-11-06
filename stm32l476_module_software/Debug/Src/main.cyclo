@@ -1,0 +1,10 @@
+../Src/main.c:89:6:update_configuration	1
+../Src/main.c:99:6:print_data	3
+../Src/main.c:123:5:main	8
+../Src/main.c:260:6:SystemClock_Config	4
+../Src/main.c:308:13:MX_SPI1_Init	2
+../Src/main.c:348:13:MX_USART2_UART_Init	2
+../Src/main.c:390:13:MX_USART3_UART_Init	2
+../Src/main.c:423:13:MX_DMA_Init	1
+../Src/main.c:450:13:MX_GPIO_Init	1
+../Src/main.c:509:6:Error_Handler	1

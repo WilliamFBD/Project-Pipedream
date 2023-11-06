@@ -1,0 +1,2 @@
+../Src/acc_ms_system_cortex.c:11:6:acc_ms_system_critical_section_enter	8	static
+../Src/acc_ms_system_cortex.c:17:6:acc_ms_system_critical_section_exit	8	static

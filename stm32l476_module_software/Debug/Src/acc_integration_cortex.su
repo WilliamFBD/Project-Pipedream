@@ -1,0 +1,2 @@
+../Src/acc_integration_cortex.c:10:6:acc_integration_critical_section_enter	4	static,ignoring_inline_asm
+../Src/acc_integration_cortex.c:18:6:acc_integration_critical_section_exit	4	static,ignoring_inline_asm

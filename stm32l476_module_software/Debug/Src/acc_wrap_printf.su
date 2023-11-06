@@ -1,0 +1,7 @@
+../Src/acc_wrap_printf.c:33:13:out_func	24	static
+../Src/acc_wrap_printf.c:46:5:__wrap_puts	24	static
+../Src/acc_wrap_printf.c:56:5:__wrap_fputs	24	static
+../Src/acc_wrap_printf.c:67:5:__wrap_printf	224	static
+../Src/acc_wrap_printf.c:88:5:__wrap_sprintf	28	static
+../Src/acc_wrap_printf.c:99:5:__wrap_snprintf	24	static
+../Src/acc_wrap_printf.c:110:5:__wrap_vsnprintf	24	static

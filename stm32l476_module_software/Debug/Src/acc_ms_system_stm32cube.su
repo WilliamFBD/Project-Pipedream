@@ -1,0 +1,16 @@
+../Src/acc_ms_system_stm32cube.c:18:18:acc_ms_system_get_hal_implementation	8	static
+../Src/acc_ms_system_stm32cube.c:24:6:acc_ms_system_set_lowest_power_state	16	static
+../Src/acc_ms_system_stm32cube.c:30:6:acc_ms_system_uart_register_read_callback	16	static
+../Src/acc_ms_system_stm32cube.c:36:10:acc_ms_system_get_max_uart_baudrate	8	static
+../Src/acc_ms_system_stm32cube.c:42:6:acc_ms_system_uart_set_baudrate	16	static
+../Src/acc_ms_system_stm32cube.c:48:6:acc_ms_system_uart_write_buffer	16	static
+../Src/acc_ms_system_stm32cube.c:54:9:acc_ms_system_uart_get_error_count	8	static
+../Src/acc_ms_system_stm32cube.c:60:7:acc_ms_system_mem_alloc	16	static
+../Src/acc_ms_system_stm32cube.c:66:6:acc_ms_system_mem_free	16	static
+../Src/acc_ms_system_stm32cube.c:72:6:acc_ms_system_enable_irq	16	static
+../Src/acc_ms_system_stm32cube.c:78:6:acc_ms_system_signal_message	8	static
+../Src/acc_ms_system_stm32cube.c:84:6:acc_ms_system_wait_for_message	16	static
+../Src/acc_ms_system_stm32cube.c:90:10:acc_ms_system_get_time	8	static
+../Src/acc_ms_system_stm32cube.c:99:6:acc_ms_system_register_sensor_interrupt_callback	16	static
+../Src/acc_ms_system_stm32cube.c:105:6:acc_ms_system_is_sensor_interrupt_active	8	static
+../Src/acc_ms_system_stm32cube.c:111:6:HAL_GPIO_EXTI_Callback	16	static
