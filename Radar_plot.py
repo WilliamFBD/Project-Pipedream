@@ -5,11 +5,11 @@ import numpy as np
 import scipy.signal as signal
 import math
 
-com_port = 19
+com_port = 4
 baudrate = 2000000
-read_distance = 200 #Range of sensor readout in mm
+read_distance = 200  # Range of sensor readout in mm
 packet_size = 413
-resolution = 20 #plotting increments in mm
+resolution = 20  # plotting increments in mm
 
 # How much much does the water fall per meter? messured in meters
 pipe_slope = 0.05
@@ -38,7 +38,7 @@ mannings_roughness_coefficient = 0.009
 """
 
 packet_arange = np.arange(13, packet_size, resolution)
-dist_arange = np.arange(0, read_distance, (resolution/2))
+dist_arange = np.arange(0, read_distance, (resolution / 2))
 
 # Set up the serial connection
 ser = serial.Serial(f'COM{com_port}', baudrate=baudrate)
@@ -47,26 +47,32 @@ ser = serial.Serial(f'COM{com_port}', baudrate=baudrate)
 data = np.array([], dtype=int)
 buffer = np.array([], dtype=int)
 
-def calculate_flow_rate(flow_depth, slope=pipe_slope, roughness=mannings_roughness_coefficient, diameter=pipe_diameter):
-    
-    radii = diameter/2
-    # Calculate the cross sectional area of the flow
-    flow_area = (radii)**2 * ((2*math.acos(radii-flow_depth / radii)) - math.sin(2*math.acos(radii-flow_depth / radii)))/2
-    
+
+def calculate_flow_rate(flow_depth, slope=pipe_slope, roughness=mannings_roughness_coefficient,
+                        diameter=pipe_diameter):
+    radii = (diameter * 10) / 2
+
+    depth_ratio = (radii - round(flow_depth, 2)) / radii
+
+    wetted_perimeter = 2 * radii * math.acos(depth_ratio)
+
+    # Calculate the cross-sectional area of the flow
+    flow_area = radii ** 2 * (wetted_perimeter - math.sin(wetted_perimeter)) / 2
+
     # Calculate the hydraulic radius
-    hydraulic_radius = flow_area / (radii * 2*math.acos(radii - flow_depth / radii))
-    
-    
+    hydraulic_radius = flow_area / (radii * wetted_perimeter)
+
     # Calculate the flow rate
-    flow_rate = (1 / roughness) * flow_area * (hydraulic_radius * (2/3)) * (slope * (1/2))
-      
+    flow_rate = (flow_area * (hydraulic_radius ** (2 / 3)) * (slope ** (1 / 2))) / roughness
+
     return flow_rate
+
 
 # Create a function to collect data until a "." delimiter is received
 def collect_data():
     global buffer, data
     line = ""
-    
+
     while True:
         try:
             char = ser.read().decode()
@@ -78,12 +84,12 @@ def collect_data():
                 line = ""
             elif char.isdigit():
                 line += char
-                
+
             if data.size == packet_size:
-                
+
                 for i in range(len(data)):
-                    if data[i] > 100+data[i-1] and data[i] > 100+data[i+1]:
-                        data[i] = data[i-1] + data[i+1] / 2
+                    if data[i] > 100 + data[i - 1] and data[i] > 100 + data[i + 1]:
+                        data[i] = data[i - 1] + data[i + 1] / 2
                 data = signal.medfilt(data)
                 buffer = np.copy(data)
                 break
@@ -91,12 +97,18 @@ def collect_data():
         except ValueError:
             pass
 
+
 def plot(data):
     try:
-        plt.plot(data, label=f'Peak: {np.argmax(data)/read_distance}')
+        water_height = (305 - np.argmax(data)) / 2
+        if water_height < 0:
+            water_height = 1
+        print(f"Flow rate: {round(calculate_flow_rate((water_height) / 100), 2)} Liter/s)")
+        plt.plot(data, label=f'Peak: {water_height}mm')
         plt.xticks(packet_arange, dist_arange)
     except:
         pass
+
 
 # Create a function to update the plot
 def animate(i):
@@ -105,10 +117,13 @@ def animate(i):
     data = np.array([], dtype=int)
     collect_data()
     if data.size == packet_size:
+
         plot(data)
     else:
         plot(buffer)
+
     plt.legend()
+
 
 # Set up the figure and animation
 
