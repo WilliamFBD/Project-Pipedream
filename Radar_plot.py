@@ -76,6 +76,23 @@ def calculate_flow_rate(flow_depth, slope=pipe_slope, roughness=mannings_roughne
 
     return flow_rate
 
+last_time = time.time()
+total_flow_volume = 0
+
+"""
+    Calculates the total flow volume of the water
+    
+    Args:
+    flow_rate: The flow rate of the water
+    last_time: The time of the last calculation
+    total_flow_volume: The total flow volume of the water
+"""
+def calculate_total_flow(flow_rate, last_time, total_flow_volume=total_flow_volume):
+    delta_time = time.time() - last_time
+    delta_flow = flow_rate * delta_time
+    total_flow_volume += delta_flow
+    return total_flow_volume
+
 
 # Create a function to collect data until a "." delimiter is received
 def collect_data():
@@ -106,7 +123,14 @@ def collect_data():
 
         except ValueError:
             pass
+        
 
+"""
+    Plots the data and calculates the flow rate of the water
+    
+    Args:
+    data: The data to be plotted
+"""
 def plot(data):
     try:
         water_height = (305 - np.argmax(data)) / 2
@@ -143,15 +167,7 @@ def animate(i):
 
     plt.legend()
     
-last_time = time.time()
-total_flow_volume = 0
 
-# Calculates the total amount of water that has flown through the pipe
-def calculate_total_flow(flow_rate, last_time, total_flow_volume=total_flow_volume):
-    delta_time = time.time() - last_time
-    delta_flow = flow_rate * delta_time
-    total_flow_volume += delta_flow
-    return total_flow_volume
 
 # Set up the figure and animation
 
