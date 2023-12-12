@@ -137,18 +137,18 @@ def plot(data):
         if water_height < 0:
             water_height = 1
         print(f"Flow rate: {round(calculate_flow_rate((water_height) / 100), 2)} Liter/s ## Total flow: {round(calculate_total_flow(calculate_flow_rate((water_height) / 100), last_time), 2)} Liter(s)")
-        plt.plot(data, label=f'Waterlevel: {water_height}mm')
+        plt.plot(data, label=f'Water level: {water_height}mm')
         plt.xticks(packet_arange, (np.flip(dist_arange)/2))
         plt.xticks(rotation=45)
     except:
         #Checks if the water height is defined, if the first plot() exception is thrown before water_height is defined it will set water_height to 0
         try:
-            plt.plot(data, label=f'Waterlevel: {water_height}mm')
+            plt.plot(data, label=f'Water level: {water_height}mm')
             plt.xticks(packet_arange, (np.flip(dist_arange)/2))
             plt.xticks(rotation=45)
         except:
             water_height = 0
-            plt.plot(data, label=f'Waterlevel: {water_height}mm')
+            plt.plot(data, label=f'Water level: {water_height}mm')
             plt.xticks(packet_arange, (np.flip(dist_arange)/2))
             plt.xticks(rotation=45)
 
