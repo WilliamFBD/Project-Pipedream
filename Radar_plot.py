@@ -89,8 +89,9 @@ def collect_data():
             if data.size == packet_size:
 
                 for i in range(len(data)):
-                    if data[i] > 100 + data[i - 1] and data[i] > 100 + data[i + 1]:
-                        data[i] = data[i - 1] + data[i + 1] / 2
+                    if i != 0 and i != len(data) - 1:
+                        if data[i] > 100 + data[i - 1] and data[i] > 100 + data[i + 1]:
+                            data[i] = data[i - 1] + data[i + 1] / 2
                 data = signal.medfilt(data)
                 buffer = np.copy(data)
                 break
