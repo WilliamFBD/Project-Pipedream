@@ -104,18 +104,18 @@ def plot(data):
             water_height = 1
         print(f"Flow rate: {round(calculate_flow_rate((water_height) / 100), 2)} Liter/s)")
         plt.plot(data, label=f'Peak: {water_height}mm')
-        plt.xticks(packet_arange, dist_arange)
+        plt.xticks(packet_arange, (dist_arange/2)-5)
         plt.xticks(rotation=45)
     except:
         #Checks if the water height is defined, if the first plot() exception is thrown before water_height is defined it will set water_height to 0
         try:
             plt.plot(data, label=f'Peak: {water_height}mm')
-            plt.xticks(packet_arange, dist_arange)
+            plt.xticks(packet_arange, (dist_arange/2)-5)
             plt.xticks(rotation=45)
         except:
             water_height = 0
             plt.plot(data, label=f'Peak: {water_height}mm')
-            plt.xticks(packet_arange, dist_arange)
+            plt.xticks(packet_arange, (dist_arange/2)-5)
             plt.xticks(rotation=45)
 
 
