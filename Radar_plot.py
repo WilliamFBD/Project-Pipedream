@@ -58,8 +58,7 @@ buffer = np.array([], dtype=int)
     roughness: The roughness of the pipe
     diameter: The diameter of the pipe
 """
-def calculate_flow_rate(flow_depth, slope=pipe_slope, roughness=mannings_roughness_coefficient,
-                        diameter=pipe_diameter):
+def calculate_flow_rate(flow_depth, slope=pipe_slope, roughness=mannings_roughness_coefficient, diameter=pipe_diameter):
     radii = (diameter * 10) / 2
 
     depth_ratio = (radii - round(flow_depth, 2)) / radii
@@ -96,7 +95,7 @@ def collect_data():
                 line += char
 
             if data.size == packet_size:
-
+                # Tryes to limit the amount of noise in the data by removing data points that are more than 100mm away from the previous and next data point
                 for i in range(len(data)):
                     if i != 0 and i != len(data) - 1:
                         if data[i] > 100 + data[i - 1] and data[i] > 100 + data[i + 1]:
