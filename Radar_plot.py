@@ -16,10 +16,10 @@ resolution = 20  # plotting increments in mm
 pipe_slope = 0.05
 # The diameter of the pipe in meters
 pipe_diameter = 0.1
-
+# The roughness of the pipe
 mannings_roughness_coefficient = 0.009
 
-# Manning Roughness Coefficient of the pipe
+# Manning Roughness Coefficient of diffrent pipe materials
 """
     Asbestos cement - 0.011
     Brass - 0.011
@@ -49,6 +49,15 @@ data = np.array([], dtype=int)
 buffer = np.array([], dtype=int)
 
 
+"""
+    Calculates the flow rate of the water in the pipe
+    
+    Args:
+    flow_depth: The depth of the water in the pipe
+    slope: The slope of the pipe
+    roughness: The roughness of the pipe
+    diameter: The diameter of the pipe
+"""
 def calculate_flow_rate(flow_depth, slope=pipe_slope, roughness=mannings_roughness_coefficient,
                         diameter=pipe_diameter):
     radii = (diameter * 10) / 2
