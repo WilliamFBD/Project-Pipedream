@@ -7,9 +7,9 @@ import math
 import time
 
 com_port = 4
-baudrate = 2000000
+baudrate = 2e6
 read_distance = 200  # Range of sensor readout in mm
-packet_size = 413
+packet_size = 413 # expected length of the data packet from one readout
 resolution = 20  # plotting increments in mm
 
 # How much much does the water fall per meter? messured in meters
@@ -127,9 +127,11 @@ def animate(i):
     global data
     data = np.array([], dtype=int)
     collect_data()
+    
+    #Plots new readout if the length of data values is equal to the expected packet size
     if data.size == packet_size:
-
         plot(data)
+    #Plots the previous acceptable data packet
     else:
         plot(buffer)
 
@@ -138,7 +140,7 @@ def animate(i):
 last_time = time.time()
 total_flow_volume = 0
 
-# Calculates the total amount of water that has flown through the pipe
+# Calculates the total amount of water that has flowed through the pipe
 def calculate_total_flow(flow_rate, last_time, total_flow_volume=total_flow_volume):
     delta_time = time.time() - last_time
     delta_flow = flow_rate * delta_time
