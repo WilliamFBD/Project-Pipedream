@@ -7,19 +7,19 @@ import math
 import time
 
 com_port = 4
-baudrate = 2e6
+baudrate = 2000000
 read_distance = 200  # Range of sensor readout in mm
-packet_size = 413 # expected length of the data packet from one readout
+packet_size = 413
 resolution = 20  # plotting increments in mm
 
 # How much much does the water fall per meter? messured in meters
 pipe_slope = 0.05
 # The diameter of the pipe in meters
 pipe_diameter = 0.1
-
+# The roughness of the pipe
 mannings_roughness_coefficient = 0.009
 
-# Manning Roughness Coefficient of the pipe
+# Manning Roughness Coefficient of diffrent pipe materials
 """
     Asbestos cement - 0.011
     Brass - 0.011
@@ -49,8 +49,16 @@ data = np.array([], dtype=int)
 buffer = np.array([], dtype=int)
 
 
-def calculate_flow_rate(flow_depth, slope=pipe_slope, roughness=mannings_roughness_coefficient,
-                        diameter=pipe_diameter):
+"""
+    Calculates the flow rate of the water in the pipe
+    
+    Args:
+    flow_depth: The depth of the water in the pipe
+    slope: The slope of the pipe
+    roughness: The roughness of the pipe
+    diameter: The diameter of the pipe
+"""
+def calculate_flow_rate(flow_depth, slope=pipe_slope, roughness=mannings_roughness_coefficient, diameter=pipe_diameter):
     radii = (diameter * 10) / 2
 
     depth_ratio = (radii - round(flow_depth, 2)) / radii
@@ -67,6 +75,23 @@ def calculate_flow_rate(flow_depth, slope=pipe_slope, roughness=mannings_roughne
     flow_rate = (flow_area * (hydraulic_radius ** (2 / 3)) * (slope ** (1 / 2))) / roughness
 
     return flow_rate
+
+last_time = time.time()
+total_flow_volume = 0
+
+"""
+    Calculates the total flow volume of the water
+    
+    Args:
+    flow_rate: The flow rate of the water
+    last_time: The time of the last calculation
+    total_flow_volume: The total flow volume of the water
+"""
+def calculate_total_flow(flow_rate, last_time, total_flow_volume=total_flow_volume):
+    delta_time = time.time() - last_time
+    delta_flow = flow_rate * delta_time
+    total_flow_volume += delta_flow
+    return total_flow_volume
 
 
 # Create a function to collect data until a "." delimiter is received
@@ -87,7 +112,7 @@ def collect_data():
                 line += char
 
             if data.size == packet_size:
-
+                # Tryes to limit the amount of noise in the data by removing data points that are more than 100mm away from the previous and next data point
                 for i in range(len(data)):
                     if i != 0 and i != len(data) - 1:
                         if data[i] > 100 + data[i - 1] and data[i] > 100 + data[i + 1]:
@@ -98,26 +123,33 @@ def collect_data():
 
         except ValueError:
             pass
+        
 
+"""
+    Plots the data and calculates the flow rate of the water
+    
+    Args:
+    data: The data to be plotted
+"""
 def plot(data):
     try:
         water_height = (305 - np.argmax(data)) / 2
         if water_height < 0:
             water_height = 1
         print(f"Flow rate: {round(calculate_flow_rate((water_height) / 100), 2)} Liter/s ## Total flow: {round(calculate_total_flow(calculate_flow_rate((water_height) / 100), last_time), 2)} Liter(s)")
-        plt.plot(data, label=f'Peak: {water_height}mm')
-        plt.xticks(packet_arange, (dist_arange/2)-5)
+        plt.plot(data, label=f'Water level: {water_height}mm')
+        plt.xticks(packet_arange, (np.flip(dist_arange)/2))
         plt.xticks(rotation=45)
     except:
         #Checks if the water height is defined, if the first plot() exception is thrown before water_height is defined it will set water_height to 0
         try:
-            plt.plot(data, label=f'Peak: {water_height}mm')
-            plt.xticks(packet_arange, (dist_arange/2)-5)
+            plt.plot(data, label=f'Water level: {water_height}mm')
+            plt.xticks(packet_arange, (np.flip(dist_arange)/2))
             plt.xticks(rotation=45)
         except:
             water_height = 0
-            plt.plot(data, label=f'Peak: {water_height}mm')
-            plt.xticks(packet_arange, (dist_arange/2)-5)
+            plt.plot(data, label=f'Water level: {water_height}mm')
+            plt.xticks(packet_arange, (np.flip(dist_arange)/2))
             plt.xticks(rotation=45)
 
 
@@ -127,25 +159,15 @@ def animate(i):
     global data
     data = np.array([], dtype=int)
     collect_data()
-    
-    #Plots new readout if the length of data values is equal to the expected packet size
     if data.size == packet_size:
+
         plot(data)
-    #Plots the previous acceptable data packet
     else:
         plot(buffer)
 
     plt.legend()
     
-last_time = time.time()
-total_flow_volume = 0
 
-# Calculates the total amount of water that has flowed through the pipe
-def calculate_total_flow(flow_rate, last_time, total_flow_volume=total_flow_volume):
-    delta_time = time.time() - last_time
-    delta_flow = flow_rate * delta_time
-    total_flow_volume += delta_flow
-    return total_flow_volume
 
 # Set up the figure and animation
 
