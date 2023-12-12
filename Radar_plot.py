@@ -114,7 +114,7 @@ def collect_data():
             if data.size == packet_size:
                 # Tryes to limit the amount of noise in the data by removing data points that are more than 100mm away from the previous and next data point
                 for i in range(len(data)):
-                    if i != 0 and i != len(data) - 1:
+                    if i != 0 and i < len(data) - 1:
                         if data[i] > 100 + data[i - 1] and data[i] > 100 + data[i + 1]:
                             data[i] = data[i - 1] + data[i + 1] / 2
                 data = signal.medfilt(data)
