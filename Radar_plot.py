@@ -97,7 +97,6 @@ def collect_data():
         except ValueError:
             pass
 
-
 def plot(data):
     try:
         water_height = (305 - np.argmax(data)) / 2
@@ -108,10 +107,16 @@ def plot(data):
         plt.xticks(packet_arange, dist_arange)
         plt.xticks(rotation=45)
     except:
-        water_height = (305 - np.argmax(data)) / 2
-        plt.plot(data, label=f'Peak: {water_height}mm')
-        plt.xticks(packet_arange, dist_arange)
-        plt.xticks(rotation=45)
+        #Checks if the water height is defined, if the first plot() exception is thrown before water_height is defined it will set water_height to 0
+        try:
+            plt.plot(data, label=f'Peak: {water_height}mm')
+            plt.xticks(packet_arange, dist_arange)
+            plt.xticks(rotation=45)
+        except:
+            water_height = 0
+            plt.plot(data, label=f'Peak: {water_height}mm')
+            plt.xticks(packet_arange, dist_arange)
+            plt.xticks(rotation=45)
 
 
 # Create a function to update the plot
