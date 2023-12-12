@@ -106,8 +106,12 @@ def plot(data):
         print(f"Flow rate: {round(calculate_flow_rate((water_height) / 100), 2)} Liter/s)")
         plt.plot(data, label=f'Peak: {water_height}mm')
         plt.xticks(packet_arange, dist_arange)
+        plt.xticks(rotation=45)
     except:
-        pass
+        water_height = (305 - np.argmax(data)) / 2
+        plt.plot(data, label=f'Peak: {water_height}mm')
+        plt.xticks(packet_arange, dist_arange)
+        plt.xticks(rotation=45)
 
 
 # Create a function to update the plot
