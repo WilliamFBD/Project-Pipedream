@@ -4,6 +4,7 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 import scipy.signal as signal
 import math
+import time
 
 com_port = 4
 baudrate = 2000000
@@ -102,7 +103,7 @@ def plot(data):
         water_height = (305 - np.argmax(data)) / 2
         if water_height < 0:
             water_height = 1
-        print(f"Flow rate: {round(calculate_flow_rate((water_height) / 100), 2)} Liter/s)")
+        print(f"Flow rate: {round(calculate_flow_rate((water_height) / 100), 2)} Liter/s ## Total flow: {round(calculate_total_flow(calculate_flow_rate((water_height) / 100), last_time), 2)} Liter(s)")
         plt.plot(data, label=f'Peak: {water_height}mm')
         plt.xticks(packet_arange, (dist_arange/2)-5)
         plt.xticks(rotation=45)
@@ -132,7 +133,16 @@ def animate(i):
         plot(buffer)
 
     plt.legend()
+    
+last_time = time.time()
+total_flow_volume = 0
 
+# Calculates the total amount of water that has flown through the pipe
+def calculate_total_flow(flow_rate, last_time, total_flow_volume=total_flow_volume):
+    delta_time = time.time() - last_time
+    delta_flow = flow_rate * delta_time
+    total_flow_volume += delta_flow
+    return total_flow_volume
 
 # Set up the figure and animation
 
