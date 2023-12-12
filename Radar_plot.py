@@ -7,7 +7,7 @@ import math
 import time
 
 com_port = 4
-baudrate = 2000000
+baudrate = 2e6
 read_distance = 200  # Range of sensor readout in mm
 packet_size = 413
 resolution = 20  # plotting increments in mm
@@ -154,6 +154,14 @@ def plot(data):
 
 
 # Create a function to update the plot
+    """
+        A function to be used in the FuncAnimation function in order to animate the plotting
+        
+        It plots the new data if data.size = packet_size. 
+        if this is not the case, it plots the buffer data, which is the last data packet which had the correct amount of elements
+        
+        In essence it removes the most severe faulty readouts 
+    """
 def animate(i):
     plt.clf()  # Clear the current plot
     global data
